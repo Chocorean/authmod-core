@@ -1,0 +1,115 @@
+package io.chocorean.authmod.core.datasource;
+
+import io.chocorean.authmod.core.Player;
+import io.chocorean.authmod.core.PlayerInterface;
+import io.chocorean.authmod.core.datasource.*;
+import io.chocorean.authmod.core.datasource.db.DBHelpers;
+import io.chocorean.authmod.core.exception.AuthmodError;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+
+class DataSourceTest {
+
+  private PlayerInterface player;
+
+  @BeforeEach
+  void init() {
+    this.player = new Player().setUsername("Tyler");
+  }
+
+  private static Stream<Arguments> provideDataSources() throws Exception {
+    File csv = Files.createTempFile("testing","authmod.csv").toFile();
+    DataSourceStrategyInterface file = new FileDataSourceStrategy(csv);
+    DataSourceStrategyInterface database = new DatabaseStrategy(DBHelpers.initDatabase());
+
+    return Stream.of(
+      Arguments.of(database),
+      Arguments.of(file)
+    );
+  }
+
+  public boolean registerPlayer(DataSourceStrategyInterface dataSource, PlayerInterface player) throws AuthmodError {
+    DataSourcePlayerInterface playerToRegister = new DataSourcePlayer(player);
+    return dataSource.add(playerToRegister);
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideDataSources")
+  void testRegisterPlayer(DataSourceStrategyInterface dataSource) throws AuthmodError {
+    assertTrue(this.registerPlayer(dataSource, this.player));
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideDataSources")
+  void testRegisterPlayerTwice(DataSourceStrategyInterface dataSource) throws AuthmodError {
+    assertTrue(this.registerPlayer(dataSource, this.player));
+    assertFalse(this.registerPlayer(dataSource, this.player));
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideDataSources")
+  void testFind(DataSourceStrategyInterface dataSource) throws AuthmodError {
+    this.registerPlayer(dataSource, this.player);
+    assertNotNull(dataSource.find(this.player.getUsername()), "The player should be found");
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideDataSources")
+  void testFindNotExist(DataSourceStrategyInterface dataSource) throws AuthmodError {
+    this.registerPlayer(dataSource, this.player);
+    assertNull(dataSource.find("test@test.com"), "The player should not exist");
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideDataSources")
+  void testExist(DataSourceStrategyInterface dataSource) throws AuthmodError {
+    this.registerPlayer(dataSource, this.player);
+    assertTrue(dataSource.exist(new DataSourcePlayer(this.player)), "The player should exist");
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideDataSources")
+  void testFindByUsernameNotExist(DataSourceStrategyInterface dataSource) throws AuthmodError {
+    this.registerPlayer(dataSource, this.player);
+    assertNull(dataSource.find("Eddy le quartier"), "The player should not exist");
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideDataSources")
+  void testFindByUsernameNullParams(DataSourceStrategyInterface dataSource) throws AuthmodError {
+    this.registerPlayer(dataSource, this.player);
+    assertNull(dataSource.find(null), "It should return null");
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideDataSources")
+  void testFindNullParams(DataSourceStrategyInterface dataSource) throws AuthmodError {
+    this.registerPlayer(dataSource, this.player);
+    assertNull(dataSource.find(null), "It should return null");
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideDataSources")
+  void testUpdateNotExist(DataSourceStrategyInterface dataSource) throws AuthmodError {
+    boolean res = dataSource.updatePassword(new DataSourcePlayer());
+    assertFalse(res);
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideDataSources")
+  void testUpdate(DataSourceStrategyInterface dataSource) throws AuthmodError {
+    this.registerPlayer(dataSource, this.player);
+    boolean res = dataSource.updatePassword(new DataSourcePlayer(this.player).setPassword("rootme"));
+    assertTrue(res);
+  }
+
+}
