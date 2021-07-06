@@ -1,22 +1,20 @@
 package io.chocorean.authmod.core;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
 import io.chocorean.authmod.core.datasource.DatabaseStrategy;
 import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.core.datasource.db.DBHelpers;
 import io.chocorean.authmod.core.exception.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class DataSourceGuardTest {
 
@@ -40,16 +38,16 @@ class DataSourceGuardTest {
 
   private void init(DataSourceStrategyInterface impl) throws Exception {
     this.dataSourceStrategy = impl;
-    if(impl instanceof FileDataSourceStrategy && FILE.exists()) {
+    if (impl instanceof FileDataSourceStrategy && FILE.exists()) {
       FILE.delete();
     }
-    if(impl instanceof DatabaseStrategy) {
+    if (impl instanceof DatabaseStrategy) {
       connectionFactory.getConnection().createStatement().execute("DELETE FROM players");
     }
     this.guard = new DataSourceGuard(dataSourceStrategy);
     this.player = new Player("fsociety", null);
-    this.registrationPayload = new Payload(this.player, new String[]{password, password});
-    this.loginPayload = new Payload(this.player, new String[]{password});
+    this.registrationPayload = new Payload(this.player, new String[] { password, password });
+    this.loginPayload = new Payload(this.player, new String[] { password });
   }
 
   @ParameterizedTest(name = "with {0}")
@@ -64,7 +62,7 @@ class DataSourceGuardTest {
   void testAuthenticate(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
-    PayloadInterface payload = new Payload(this.player, new String[]{this.password});
+    PayloadInterface payload = new Payload(this.player, new String[] { this.password });
     assertTrue(this.guard.authenticate(payload));
   }
 
@@ -73,7 +71,7 @@ class DataSourceGuardTest {
   void testAuthenticateWrongPassword(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
-    this.loginPayload = new Payload(this.player, new String[]{"qwertyqwerty"});
+    this.loginPayload = new Payload(this.player, new String[] { "qwertyqwerty" });
     assertThrows(WrongPasswordError.class, () -> this.guard.authenticate(loginPayload));
   }
 
@@ -81,7 +79,7 @@ class DataSourceGuardTest {
   @MethodSource("parameters")
   void testAuthenticateUnknownPlayer(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
-    PayloadInterface payload = new Payload(this.player.setUsername("admin"), new String[]{"rootroot"});
+    PayloadInterface payload = new Payload(this.player.setUsername("admin"), new String[] { "rootroot" });
     assertThrows(PlayerNotFoundError.class, () -> this.guard.authenticate(payload));
   }
 
@@ -90,7 +88,7 @@ class DataSourceGuardTest {
   void testAuthenticateBanned(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
-    if(impl instanceof DatabaseStrategy) {
+    if (impl instanceof DatabaseStrategy) {
       DBHelpers.banPlayer(connectionFactory, registrationPayload.getPlayer().getUsername());
     }
     this.dataSourceStrategy.find(registrationPayload.getPlayer().getUsername()).setBanned(true);
@@ -124,7 +122,7 @@ class DataSourceGuardTest {
   void testRegisterIdentifierRequired(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard = new DataSourceGuard(dataSourceStrategy, true);
-    this.registrationPayload = new Payload(this.player, new String[]{"Crumb", this.password, this.password});
+    this.registrationPayload = new Payload(this.player, new String[] { "Crumb", this.password, this.password });
     assertTrue(this.guard.register(this.registrationPayload));
   }
 
@@ -133,10 +131,10 @@ class DataSourceGuardTest {
   void testChangePassword(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
-    PayloadInterface payload = new Payload(this.player, new String[]{this.password});
+    PayloadInterface payload = new Payload(this.player, new String[] { this.password });
     assertTrue(this.guard.authenticate(payload));
     String newPassword = "qwertyazerty";
-    assertTrue(this.guard.updatePassword(new Payload(this.player, new String[]{this.password, newPassword, newPassword})));
+    assertTrue(this.guard.updatePassword(new Payload(this.player, new String[] { this.password, newPassword, newPassword })));
   }
 
   @ParameterizedTest(name = "with {0}")
@@ -144,10 +142,10 @@ class DataSourceGuardTest {
   void testChangeNotExist(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
-    PayloadInterface payload = new Payload(this.player, new String[]{this.password});
+    PayloadInterface payload = new Payload(this.player, new String[] { this.password });
     assertTrue(this.guard.authenticate(payload));
     String newPassword = "qwertyazerty";
-    assertFalse(this.guard.updatePassword(new Payload(new Player(), new String[]{this.password, newPassword, newPassword})));
+    assertFalse(this.guard.updatePassword(new Payload(new Player(), new String[] { this.password, newPassword, newPassword })));
   }
 
   @ParameterizedTest(name = "with {0}")
@@ -155,9 +153,12 @@ class DataSourceGuardTest {
   void testChangePasswordSamePassword(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
-    PayloadInterface payload = new Payload(this.player, new String[]{this.password});
+    PayloadInterface payload = new Payload(this.player, new String[] { this.password });
     assertTrue(this.guard.authenticate(payload));
-    assertThrows(SamePasswordError.class, () -> this.guard.updatePassword(new Payload(this.player, new String[]{this.password, this.password, this.password})));
+    assertThrows(
+      SamePasswordError.class,
+      () -> this.guard.updatePassword(new Payload(this.player, new String[] { this.password, this.password, this.password }))
+    );
   }
 
   @ParameterizedTest(name = "with {0}")
@@ -165,17 +166,19 @@ class DataSourceGuardTest {
   void testChangePasswordWrongConfirmation(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
-    PayloadInterface payload = new Payload(this.player, new String[]{this.password});
+    PayloadInterface payload = new Payload(this.player, new String[] { this.password });
     assertTrue(this.guard.authenticate(payload));
-    assertThrows(WrongPasswordConfirmationError.class, () -> this.guard.updatePassword(new Payload(this.player, new String[]{this.password, "Provencal le gaulois", "Perceval le gallois"})));
+    assertThrows(
+      WrongPasswordConfirmationError.class,
+      () ->
+        this.guard.updatePassword(
+            new Payload(this.player, new String[] { this.password, "Provencal le gaulois", "Perceval le gallois" })
+          )
+    );
   }
 
   static Stream<Arguments> parameters() throws Exception {
     connectionFactory = DBHelpers.initDatabase();
-    return Stream.of(
-      Arguments.of(new FileDataSourceStrategy(FILE)),
-      Arguments.of(new DatabaseStrategy(connectionFactory))
-    );
+    return Stream.of(Arguments.of(new FileDataSourceStrategy(FILE)), Arguments.of(new DatabaseStrategy(connectionFactory)));
   }
-
 }

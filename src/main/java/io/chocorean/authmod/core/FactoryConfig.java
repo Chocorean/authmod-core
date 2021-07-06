@@ -1,14 +1,13 @@
 package io.chocorean.authmod.core;
 
+import static io.chocorean.authmod.core.datasource.DataSourceStrategyInterface.Strategy.FILE;
+
 import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
 import io.chocorean.authmod.core.datasource.DatabaseStrategy;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumMap;
 import java.util.Map;
-
-import static io.chocorean.authmod.core.datasource.DataSourceStrategyInterface.Strategy.FILE;
 
 public class FactoryConfig {
 
@@ -25,14 +24,11 @@ public class FactoryConfig {
   private Map<DatabaseStrategy.Column, String> columns = new EnumMap<>(DatabaseStrategy.Column.class);
   private Path configDirectory = Paths.get(System.getProperty("java.io.tmpdir"));
 
-
-
   public String getDialect() {
     return dialect;
   }
 
   public FactoryConfig setDialect(String dialect) {
-
     this.dialect = dialect.trim();
     return this;
   }
@@ -135,5 +131,4 @@ public class FactoryConfig {
     this.configDirectory = configDirectory;
     return this;
   }
-
 }

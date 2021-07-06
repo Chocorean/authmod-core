@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public interface ConnectionFactoryInterface {
-
   /**
    * Get a connection to database
    *

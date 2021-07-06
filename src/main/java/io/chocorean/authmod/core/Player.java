@@ -1,6 +1,5 @@
 package io.chocorean.authmod.core;
 
-
 public class Player implements PlayerInterface {
 
   private String uuid;
@@ -21,12 +20,17 @@ public class Player implements PlayerInterface {
   }
 
   public Player setUuid(String uuid) {
-    if(uuid == null)
-      uuid = "";
+    if (uuid == null) uuid = "";
     if (uuid.length() == 32) {
       uuid =
-        String.format("%s-%s-%s-%s-%s", uuid.substring(0, 8), uuid.substring(8, 12), uuid.substring(12, 16),
-          uuid.substring(16, 20), uuid.substring(20, 32));
+        String.format(
+          "%s-%s-%s-%s-%s",
+          uuid.substring(0, 8),
+          uuid.substring(8, 12),
+          uuid.substring(12, 16),
+          uuid.substring(16, 20),
+          uuid.substring(20, 32)
+        );
     }
     this.uuid = uuid.length() == 36 ? uuid : "";
     return this;
@@ -48,5 +52,4 @@ public class Player implements PlayerInterface {
   public String toString() {
     return String.format("{username: %s, uuid: %s}", this.getUsername(), this.getUuid());
   }
-
 }

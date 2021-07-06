@@ -1,9 +1,9 @@
 package io.chocorean.authmod.core.datasource;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DataSourcePlayerTest {
 
@@ -51,5 +51,4 @@ class DataSourcePlayerTest {
   void testToString() {
     assertNotNull(this.player.toString());
   }
-
 }

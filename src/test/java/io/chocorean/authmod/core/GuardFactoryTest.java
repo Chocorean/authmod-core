@@ -1,16 +1,15 @@
 package io.chocorean.authmod.core;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
 import io.chocorean.authmod.core.datasource.db.DBHelpers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class GuardFactoryTest {
 
@@ -18,8 +17,8 @@ class GuardFactoryTest {
 
   @BeforeEach
   void setup() throws IOException {
-    this.config = new FactoryConfig()
-      .setConfigDirectory(Files.createTempDirectory(GuardFactoryTest.class.getSimpleName()).toAbsolutePath());
+    this.config =
+      new FactoryConfig().setConfigDirectory(Files.createTempDirectory(GuardFactoryTest.class.getSimpleName()).toAbsolutePath());
   }
 
   @Test
@@ -42,7 +41,6 @@ class GuardFactoryTest {
   }
 
   private Path getTestingConfig(String file) {
-    return Paths.get("src","test", "resources", file).toAbsolutePath();
+    return Paths.get("src", "test", "resources", file).toAbsolutePath();
   }
-
 }

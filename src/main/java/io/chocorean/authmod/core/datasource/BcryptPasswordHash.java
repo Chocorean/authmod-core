@@ -12,9 +12,8 @@ public class BcryptPasswordHash implements PasswordHashInterface {
   public boolean check(String hashedPassword, String password) {
     try {
       return BCrypt.checkpw(password, hashedPassword);
-    } catch(Exception e) {
+    } catch (Exception e) {
       return false;
     }
   }
-
 }

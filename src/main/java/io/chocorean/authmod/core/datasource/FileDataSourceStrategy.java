@@ -2,7 +2,6 @@ package io.chocorean.authmod.core.datasource;
 
 import io.chocorean.authmod.core.Player;
 import io.chocorean.authmod.core.exception.AuthmodError;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   private long lastModification;
   private final ArrayList<DataSourcePlayerInterface> players;
 
-  public FileDataSourceStrategy(File file,  PasswordHashInterface passwordHash) throws IOException {
+  public FileDataSourceStrategy(File file, PasswordHashInterface passwordHash) throws IOException {
     this.file = file;
     this.passwordHash = passwordHash;
     this.players = new ArrayList<>();
@@ -33,11 +32,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
     } catch (IOException e) {
       throw new AuthmodError(e.getMessage());
     }
-    return this.players
-        .stream()
-        .filter(tmp -> tmp.getIdentifier().equals(identifier))
-        .findFirst()
-        .orElse(null);
+    return this.players.stream().filter(tmp -> tmp.getIdentifier().equals(identifier)).findFirst().orElse(null);
   }
 
   @Override
@@ -47,22 +42,17 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
     } catch (IOException e) {
       throw new AuthmodError(e.getMessage());
     }
-    return this.players
-      .stream()
-      .filter(tmp -> username.equals(
-        tmp.getUsername()))
-      .findFirst()
-      .orElse(null);
+    return this.players.stream().filter(tmp -> username.equals(tmp.getUsername())).findFirst().orElse(null);
   }
 
   @Override
   public boolean add(DataSourcePlayerInterface player) throws AuthmodError {
-    if(!this.exist(player)) {
+    if (!this.exist(player)) {
       this.players.add(player);
       try {
         this.saveFile();
         return true;
-      } catch(IOException e) {
+      } catch (IOException e) {
         throw new AuthmodError(e.getMessage());
       }
     }
@@ -73,7 +63,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   public boolean exist(DataSourcePlayerInterface player) throws AuthmodError {
     return this.find(player.getIdentifier()) != null;
   }
-  
+
   @Override
   public boolean updatePassword(DataSourcePlayerInterface player) throws AuthmodError {
     if (this.exist(player)) {
@@ -93,7 +83,15 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
       bw.write(String.join(SEPARATOR, "# Identifier", " username", " hashed password", " is banned ?"));
       bw.newLine();
       for (DataSourcePlayerInterface entry : this.players) {
-        bw.write(String.join(SEPARATOR, entry.getIdentifier(), entry.getUsername(), entry.getPassword(), Boolean.toString(entry.isBanned())));
+        bw.write(
+          String.join(
+            SEPARATOR,
+            entry.getIdentifier(),
+            entry.getUsername(),
+            entry.getPassword(),
+            Boolean.toString(entry.isBanned())
+          )
+        );
         bw.newLine();
       }
       this.lastModification = Files.getLastModifiedTime(this.file.toPath()).toMillis();
@@ -108,7 +106,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
       while ((line = bf.readLine()) != null) {
         if (!line.trim().startsWith("#")) {
           String[] parts = line.trim().split(SEPARATOR);
-          if(parts.length == 4) {
+          if (parts.length == 4) {
             DataSourcePlayerInterface p = new DataSourcePlayer(new Player());
             p.setIdentifier(parts[0].trim());
             p.setUsername(parts[1].trim());
@@ -125,5 +123,4 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   private void reloadFile() throws IOException {
     if (lastModification != this.file.lastModified()) this.readFile();
   }
-
 }

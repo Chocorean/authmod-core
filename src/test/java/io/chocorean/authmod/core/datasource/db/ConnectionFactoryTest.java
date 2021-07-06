@@ -1,11 +1,10 @@
 package io.chocorean.authmod.core.datasource.db;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class ConnectionFactoryTest {
 
@@ -27,7 +26,9 @@ class ConnectionFactoryTest {
       0,
       DBHelpers.file.getAbsolutePath(),
       "root",
-      "rootroot", driver);
+      "rootroot",
+      driver
+    );
     Connection connection = connectionFactory.getConnection();
     assertNotNull(connection, "Connection should be configured correctly");
   }
@@ -36,15 +37,21 @@ class ConnectionFactoryTest {
   void testConstructorParamsSqlite() throws Exception {
     DBHelpers.initDatabaseFile();
     ConnectionFactoryInterface connectionFactory = new ConnectionFactory(
-          "sqlite",
-          "",
-          0,
-          DBHelpers.file.getAbsolutePath(),
-          null,
-          null, driver);
+      "sqlite",
+      "",
+      0,
+      DBHelpers.file.getAbsolutePath(),
+      null,
+      null,
+      driver
+    );
     Connection connection = connectionFactory.getConnection();
     assertNotNull(connection, "Connection should be configured correctly");
-    assertEquals("jdbc:sqlite:" + DBHelpers.file.getAbsolutePath(), connection.getMetaData().getURL(),"JDBC URL is malformed for SQLite");
+    assertEquals(
+      "jdbc:sqlite:" + DBHelpers.file.getAbsolutePath(),
+      connection.getMetaData().getURL(),
+      "JDBC URL is malformed for SQLite"
+    );
   }
 
   @Test
@@ -55,8 +62,10 @@ class ConnectionFactoryTest {
       3306,
       "minecraft",
       null,
-      null, driver);
-    assertEquals("jdbc:mariadb://localhost:3306/minecraft", connectionFactory.getURL(),"JDBC URL is malformed for mariadb");
+      null,
+      driver
+    );
+    assertEquals("jdbc:mariadb://localhost:3306/minecraft", connectionFactory.getURL(), "JDBC URL is malformed for mariadb");
   }
 
   @Test
@@ -67,7 +76,9 @@ class ConnectionFactoryTest {
       3306,
       "minecraft",
       "awesome",
-      "password", driver);
+      "password",
+      driver
+    );
     assertThrows(SQLException.class, connectionFactory::getConnection);
   }
 }

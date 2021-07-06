@@ -1,22 +1,20 @@
 package io.chocorean.authmod.core.datasource;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 import io.chocorean.authmod.core.Player;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.core.datasource.db.DBHelpers;
 import io.chocorean.authmod.core.exception.AuthmodError;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class DatabaseStrategyTest {
 
@@ -123,5 +121,4 @@ class DatabaseStrategyTest {
     Files.deleteIfExists(Paths.get(this.connectionFactory.getURL().split("sqlite:")[1]));
     assertThrows(AuthmodError.class, () -> this.dataSource.updatePassword(this.player));
   }
-
 }

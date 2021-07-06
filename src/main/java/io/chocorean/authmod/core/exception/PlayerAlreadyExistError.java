@@ -6,5 +6,4 @@ public class PlayerAlreadyExistError extends RegistrationError {
   public String getTranslationKey() {
     return "authmod.register.exist";
   }
-
 }

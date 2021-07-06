@@ -16,16 +16,14 @@ public class RegistrationValidator implements ValidatorInterface {
   @Override
   public boolean validate(PayloadInterface payload) throws AuthmodError {
     int numberOfArgs = this.identifierRequired ? 3 : 2;
-    if(payload.getArgs().length != numberOfArgs) {
+    if (payload.getArgs().length != numberOfArgs) {
       throw new WrongRegisterUsageError();
     }
     String password = payload.getArgs()[numberOfArgs - 2];
     String passwordConfirmation = payload.getArgs()[numberOfArgs - 1];
-    if(!password.equals(passwordConfirmation)) {
+    if (!password.equals(passwordConfirmation)) {
       throw new WrongPasswordConfirmationError();
     }
     return true;
   }
-
 }
-

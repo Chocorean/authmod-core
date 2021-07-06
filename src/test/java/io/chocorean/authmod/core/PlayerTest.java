@@ -1,9 +1,10 @@
 package io.chocorean.authmod.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
 
@@ -50,5 +51,4 @@ class PlayerTest {
     player.setUsername("korben");
     assertEquals("{username: " + this.player.getUsername() + ", uuid: " + this.player.getUuid() + "}", player.toString());
   }
-
 }

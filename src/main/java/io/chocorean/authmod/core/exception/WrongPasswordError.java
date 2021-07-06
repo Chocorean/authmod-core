@@ -9,5 +9,4 @@ public class WrongPasswordError extends LoginError {
   public String getTranslationKey() {
     return "authmod.wrongPassword";
   }
-
 }

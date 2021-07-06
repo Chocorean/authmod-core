@@ -6,5 +6,4 @@ public class WrongLoginUsageError extends AuthmodError {
   public String getTranslationKey() {
     return "authmod.login.usage";
   }
-
 }

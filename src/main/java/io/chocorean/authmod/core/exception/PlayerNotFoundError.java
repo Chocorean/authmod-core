@@ -6,5 +6,4 @@ public class PlayerNotFoundError extends LoginError {
   public String getTranslationKey() {
     return "authmod.login.notFound";
   }
-
 }

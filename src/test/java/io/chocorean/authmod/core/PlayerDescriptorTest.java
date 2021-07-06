@@ -1,9 +1,9 @@
 package io.chocorean.authmod.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PlayerDescriptorTest {
 
@@ -28,5 +28,4 @@ class PlayerDescriptorTest {
   void testGetZ() {
     assertEquals(3, this.descriptor.getZ());
   }
-
 }

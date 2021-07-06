@@ -9,5 +9,4 @@ public class WrongPasswordConfirmationError extends RegistrationError {
   public String getTranslationKey() {
     return "authmod.wrongPasswordConfirmation";
   }
-
 }

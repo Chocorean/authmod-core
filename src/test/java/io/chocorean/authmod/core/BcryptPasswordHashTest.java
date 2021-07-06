@@ -1,11 +1,11 @@
 package io.chocorean.authmod.core;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import io.chocorean.authmod.core.datasource.BcryptPasswordHash;
 import io.chocorean.authmod.core.datasource.PasswordHashInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class BcryptPasswordHashTest {
 
@@ -60,5 +60,4 @@ class BcryptPasswordHashTest {
   void testCheckNotHash() {
     assertFalse(this.passwordHash.check("pelegrino", this.password));
   }
-
 }

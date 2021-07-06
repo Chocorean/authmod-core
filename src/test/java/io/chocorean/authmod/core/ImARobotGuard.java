@@ -16,5 +16,4 @@ public class ImARobotGuard implements GuardInterface {
   public boolean updatePassword(PayloadInterface oldPayload) {
     return true;
   }
-
 }

@@ -1,15 +1,14 @@
 package io.chocorean.authmod.core.i18n;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 class ServerLanguageMapTest {
 
@@ -71,6 +70,4 @@ class ServerLanguageMapTest {
     ServerLanguageMap.loadTranslations("fr_fr");
     assertEquals("oui", ServerLanguageMap.getInstance().getOrDefault("authmod.logged.yes"));
   }
-
-
 }

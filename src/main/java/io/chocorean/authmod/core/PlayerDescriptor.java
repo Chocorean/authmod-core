@@ -1,6 +1,5 @@
 package io.chocorean.authmod.core;
 
-
 public class PlayerDescriptor {
 
   private final double x;

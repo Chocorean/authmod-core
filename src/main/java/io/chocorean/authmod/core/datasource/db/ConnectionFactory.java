@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionFactory implements ConnectionFactoryInterface {
+
   private final String url;
   private final String user;
   private final String password;
@@ -22,8 +23,8 @@ public class ConnectionFactory implements ConnectionFactoryInterface {
     Class.forName(driver);
   }
 
-  public ConnectionFactory(
-      String dialect, String host, int port, String database, String user, String password, String driver) throws ClassNotFoundException {
+  public ConnectionFactory(String dialect, String host, int port, String database, String user, String password, String driver)
+    throws ClassNotFoundException {
     StringBuilder urlBuilder = new StringBuilder();
     urlBuilder.append("jdbc:").append(dialect);
     if (!host.isEmpty()) {
@@ -39,9 +40,7 @@ public class ConnectionFactory implements ConnectionFactoryInterface {
 
   @Override
   public Connection getConnection() throws SQLException {
-    return user == null
-      ? DriverManager.getConnection(this.url)
-      : DriverManager.getConnection(this.url, this.user, this.password);
+    return user == null ? DriverManager.getConnection(this.url) : DriverManager.getConnection(this.url, this.user, this.password);
   }
 
   @Override

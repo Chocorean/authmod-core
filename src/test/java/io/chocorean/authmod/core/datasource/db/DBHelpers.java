@@ -13,24 +13,26 @@ public class DBHelpers {
   public static File file;
 
   public static void initDatabaseFile() throws IOException {
-    if(DBHelpers.file != null) {
+    if (DBHelpers.file != null) {
       Files.deleteIfExists(DBHelpers.file.toPath());
     }
     DBHelpers.file = Files.createTempFile(DBHelpers.class.getSimpleName(), "authmod.db").toFile();
   }
 
   private static String getCreationTableQuery() {
-    return "CREATE TABLE players ("
-        + "id integer PRIMARY KEY,"
-        + "identifier varchar(255) NOT NULL,"
-        + "password varchar(255),"
-        + "uuid varchar(255), "
-        + "username varchar(255) NOT NULL,"
-        + "banned INTEGER DEFAULT 0,"
-        + "UNIQUE (identifier),"
-        + "UNIQUE (uuid),"
-        + "UNIQUE (username)"
-        + ");";
+    return (
+      "CREATE TABLE players (" +
+      "id integer PRIMARY KEY," +
+      "identifier varchar(255) NOT NULL," +
+      "password varchar(255)," +
+      "uuid varchar(255), " +
+      "username varchar(255) NOT NULL," +
+      "banned INTEGER DEFAULT 0," +
+      "UNIQUE (identifier)," +
+      "UNIQUE (uuid)," +
+      "UNIQUE (username)" +
+      ");"
+    );
   }
 
   public static void banPlayer(ConnectionFactoryInterface connectionFactory, String identifier) throws Exception {
@@ -39,8 +41,8 @@ public class DBHelpers {
       PreparedStatement stmt = connection.prepareStatement("UPDATE players SET banned = true WHERE identifier = ?");
       stmt.setString(1, identifier);
       stmt.executeUpdate();
+      connection.close();
     }
-    connection.close();
   }
 
   private static void initTable(ConnectionFactoryInterface connectionFactory) throws SQLException {
@@ -50,9 +52,10 @@ public class DBHelpers {
     connection.close();
   }
 
-  public static ConnectionFactoryInterface initDatabase(String identifier) throws SQLException, IOException, ClassNotFoundException {
+  public static ConnectionFactoryInterface initDatabase(String identifier)
+    throws SQLException, IOException, ClassNotFoundException {
     initDatabaseFile();
-    ConnectionFactory connectionFactory = new ConnectionFactory("jdbc:sqlite:" + file.getAbsolutePath(),"org.sqlite.JDBC");
+    ConnectionFactory connectionFactory = new ConnectionFactory("jdbc:sqlite:" + file.getAbsolutePath(), "org.sqlite.JDBC");
     Connection connection = connectionFactory.getConnection();
     Statement stmt = connection.createStatement();
     stmt.executeUpdate(getCreationTableQuery().replace("identifier", identifier));
@@ -63,5 +66,4 @@ public class DBHelpers {
   public static ConnectionFactoryInterface initDatabase() throws SQLException, IOException, ClassNotFoundException {
     return initDatabase("identifier");
   }
-
 }

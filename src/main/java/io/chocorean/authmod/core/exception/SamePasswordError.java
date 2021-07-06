@@ -6,5 +6,4 @@ public class SamePasswordError extends ChangePasswordError {
   public String getTranslationKey() {
     return "authmod.changepassword.samePassword";
   }
-
 }

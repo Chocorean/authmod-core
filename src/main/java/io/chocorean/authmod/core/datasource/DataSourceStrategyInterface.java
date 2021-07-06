@@ -3,8 +3,10 @@ package io.chocorean.authmod.core.datasource;
 import io.chocorean.authmod.core.exception.AuthmodError;
 
 public interface DataSourceStrategyInterface {
-
-  enum Strategy {FILE, DATABASE}
+  enum Strategy {
+    FILE,
+    DATABASE,
+  }
 
   DataSourcePlayerInterface find(String identifier) throws AuthmodError;
 
@@ -17,5 +19,4 @@ public interface DataSourceStrategyInterface {
   boolean updatePassword(DataSourcePlayerInterface player) throws AuthmodError;
 
   PasswordHashInterface getHashPassword();
-
 }

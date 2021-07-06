@@ -1,5 +1,5 @@
 .DEFAULT_GOAL=help
-.PHONY: sonarqube build clean help
+.PHONY: sonarqube build clean prettier help
 branch := $(shell git branch --show-current)
 
 sonarqube: ## Run sonarqube
@@ -12,6 +12,12 @@ sonarqube: ## Run sonarqube
 
 clean:
 	./gradlew clean
+
+prettier:
+	npm init -y
+	npm install prettier-plugin-java --dev
+	npx prettier --print-width 130 --write "**/*.java"
+	rm -rf package.json package-lock.json node_modules
 
 build: ## Build the mod
 	./gradlew build

@@ -9,6 +9,11 @@ public class Payload implements PayloadInterface {
     this.player = player;
     this.arguments = args;
   }
+
+  public Payload(PlayerInterface player) {
+    this(player, new String[] {});
+  }
+
   @Override
   public PlayerInterface getPlayer() {
     return this.player;

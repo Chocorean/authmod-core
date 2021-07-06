@@ -15,11 +15,9 @@ public class LoginValidator implements ValidatorInterface {
   @Override
   public boolean validate(PayloadInterface payload) throws AuthmodError {
     int numberOfArgs = this.indentifierRequired ? 2 : 1;
-    if(payload.getArgs().length != numberOfArgs) {
+    if (payload.getArgs().length != numberOfArgs) {
       throw new WrongLoginUsageError();
     }
     return true;
   }
-
 }
-

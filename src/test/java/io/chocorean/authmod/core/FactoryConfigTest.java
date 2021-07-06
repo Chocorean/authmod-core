@@ -1,12 +1,11 @@
 package io.chocorean.authmod.core;
 
-import io.chocorean.authmod.core.datasource.DatabaseStrategy;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
+import io.chocorean.authmod.core.datasource.DatabaseStrategy;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class FactoryConfigTest {
 
@@ -24,35 +23,34 @@ class FactoryConfigTest {
   }
 
   @Test
-  void testPort()  {
+  void testPort() {
     assertEquals(1000, new FactoryConfig().setPort(1000).getPort());
   }
 
   @Test
-  void testIdentifierRequired()  {
+  void testIdentifierRequired() {
     assertTrue(new FactoryConfig().setIdentifierRequired(true).isIdentifierRequired());
   }
 
   @Test
-  void testHost()  {
+  void testHost() {
     assertEquals("localhost", new FactoryConfig().setHost("localhost").getHost());
   }
 
   @Test
-  void testUser()  {
+  void testUser() {
     assertEquals("postgres", new FactoryConfig().setUser("postgres").getUser());
   }
 
   @Test
-  void testPassword()  {
+  void testPassword() {
     assertEquals("root", new FactoryConfig().setPassword("root").getPassword());
   }
 
   @Test
-  void testColumns()  {
+  void testColumns() {
     Map<DatabaseStrategy.Column, String> columns = new HashMap<>();
     columns.put(DatabaseStrategy.Column.PASSWORD, "hashed_password");
     assertEquals(columns, new FactoryConfig().setColumns(columns).getColumns());
   }
-
 }

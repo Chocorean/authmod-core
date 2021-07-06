@@ -1,17 +1,15 @@
 package io.chocorean.authmod.core.datasource;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 import io.chocorean.authmod.core.Player;
 import io.chocorean.authmod.core.PlayerInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class FileDataSourceStrategyTest {
 
@@ -107,5 +105,4 @@ class FileDataSourceStrategyTest {
     this.dataSource = new FileDataSourceStrategy(this.dataFile);
     assertFalse(this.dataSource.exist(new DataSourcePlayer(new Player("test", null))));
   }
-
 }

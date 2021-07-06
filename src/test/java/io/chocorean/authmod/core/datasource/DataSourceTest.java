@@ -1,21 +1,18 @@
 package io.chocorean.authmod.core.datasource;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import io.chocorean.authmod.core.Player;
 import io.chocorean.authmod.core.PlayerInterface;
-import io.chocorean.authmod.core.datasource.*;
 import io.chocorean.authmod.core.datasource.db.DBHelpers;
 import io.chocorean.authmod.core.exception.AuthmodError;
+import java.io.File;
+import java.nio.file.Files;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 
 class DataSourceTest {
 
@@ -27,14 +24,11 @@ class DataSourceTest {
   }
 
   private static Stream<Arguments> provideDataSources() throws Exception {
-    File csv = Files.createTempFile("testing","authmod.csv").toFile();
+    File csv = Files.createTempFile("testing", "authmod.csv").toFile();
     DataSourceStrategyInterface file = new FileDataSourceStrategy(csv);
     DataSourceStrategyInterface database = new DatabaseStrategy(DBHelpers.initDatabase());
 
-    return Stream.of(
-      Arguments.of(database),
-      Arguments.of(file)
-    );
+    return Stream.of(Arguments.of(database), Arguments.of(file));
   }
 
   public boolean registerPlayer(DataSourceStrategyInterface dataSource, PlayerInterface player) throws AuthmodError {
@@ -111,5 +105,4 @@ class DataSourceTest {
     boolean res = dataSource.updatePassword(new DataSourcePlayer(this.player).setPassword("rootme"));
     assertTrue(res);
   }
-
 }
