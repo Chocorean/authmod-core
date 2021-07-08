@@ -25,5 +25,6 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
       - name: Build and test the project
         run: ./gradlew -Pversion="${{ steps.get_version.outputs.version-without-v }}" build test
