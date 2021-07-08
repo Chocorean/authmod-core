@@ -20,11 +20,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Get the version
-      uses: battila7/get-version-action@v2
-      id: get_version
-        - uses: "marvinpinto/action-automatic-releases@latest"
-          with:
-            repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        - name: Build and test the project
-          run: ./gradlew -Pversion="${{ steps.get_version.outputs.version-without-v }}" build test
-
+        uses: battila7/get-version-action@v2
+        id: get_version
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Build and test the project
+        run: ./gradlew -Pversion="${{ steps.get_version.outputs.version-without-v }}" build test
