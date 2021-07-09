@@ -80,7 +80,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
 
   private void saveFile() throws IOException {
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, false))) {
-      bw.write(String.join(SEPARATOR, "# Identifier", " username", " hashed password", " is banned ?"));
+      bw.write(String.join(SEPARATOR, "# Identifier", " username", " hashed password", " uuid", " is banned ?"));
       bw.newLine();
       for (DataSourcePlayerInterface entry : this.players) {
         bw.write(
@@ -89,6 +89,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
             entry.getIdentifier(),
             entry.getUsername(),
             entry.getPassword(),
+            entry.getUuid(),
             Boolean.toString(entry.isBanned())
           )
         );
@@ -106,12 +107,13 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
       while ((line = bf.readLine()) != null) {
         if (!line.trim().startsWith("#")) {
           String[] parts = line.trim().split(SEPARATOR);
-          if (parts.length == 4) {
+          if (parts.length == 5) {
             DataSourcePlayerInterface p = new DataSourcePlayer(new Player());
-            p.setIdentifier(parts[0].trim());
-            p.setUsername(parts[1].trim());
-            p.setPassword(parts[2]);
-            p.setBanned(Boolean.parseBoolean(parts[3].trim()));
+            p.setIdentifier(parts[0].trim())
+              .setPassword(parts[2])
+              .setBanned(Boolean.parseBoolean(parts[4].trim()))
+              .setUuid(parts[3].trim())
+              .setUsername(parts[1].trim());
             this.players.add(p);
           }
         }
@@ -121,6 +123,6 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   }
 
   private void reloadFile() throws IOException {
-    if (lastModification != this.file.lastModified()) this.readFile();
+    if (this.lastModification != this.file.lastModified()) this.readFile();
   }
 }

@@ -51,9 +51,10 @@ class FileDataSourceStrategyTest {
     this.registerPlayer(this.player);
     Thread.sleep(1000);
     BufferedWriter writer = new BufferedWriter(new FileWriter(this.dataFile, true));
-    writer.append("mcdostone, mcdostone, password, false");
+    writer.append("mcdostone,mcdostone,password,,false");
     writer.flush();
     writer.close();
+    Thread.sleep(1000);
     assertNotNull(this.dataSource.find("mcdostone"));
   }
 

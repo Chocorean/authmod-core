@@ -45,7 +45,7 @@ public class DataSourceGuard implements GuardInterface {
     validator.validate(payload);
     DataSourcePlayerInterface playerProxy = new DataSourcePlayer(payload.getPlayer());
     if (identifierRequired) playerProxy.setIdentifier(payload.getArgs()[0]);
-    if (this.datasource.exist(new DataSourcePlayer(payload.getPlayer()))) throw new PlayerAlreadyExistError();
+    if (this.datasource.exist(playerProxy)) throw new PlayerAlreadyExistError();
     this.hashPassword(playerProxy, payload.getArgs()[payload.getArgs().length - 1]);
     return this.datasource.add(playerProxy);
   }
