@@ -41,7 +41,7 @@ class FileDataSourceStrategyTest {
   }
 
   @Test
-  void testAddDoublon() throws AuthmodError {
+  void testAddDuplicate() throws AuthmodError {
     assertTrue(this.registerPlayer(this.player));
     assertFalse(this.registerPlayer(this.player));
   }

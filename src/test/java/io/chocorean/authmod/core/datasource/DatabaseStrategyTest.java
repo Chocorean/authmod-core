@@ -68,7 +68,7 @@ class DatabaseStrategyTest {
   }
 
   @Test
-  void testAddDoublon() throws AuthmodError {
+  void testAddDuplicate() throws AuthmodError {
     assertTrue(this.dataSource.add(this.player));
     assertFalse(this.dataSource.add(this.player));
   }
@@ -116,9 +116,21 @@ class DatabaseStrategyTest {
   }
 
   @Test
-  void testupdateSQLError() throws Exception {
+  void testUpdateSQLError() throws Exception {
     this.dataSource.add(this.player);
     Files.deleteIfExists(Paths.get(this.connectionFactory.getURL().split("sqlite:")[1]));
     assertThrows(AuthmodError.class, () -> this.dataSource.updatePassword(this.player));
+  }
+
+  @Test
+  void testResetPlayer() throws AuthmodError {
+    this.dataSource.add(this.player);
+    assertTrue(this.dataSource.resetPlayer(this.player));
+    assertNull(this.dataSource.findByUsername(this.player.getUsername()));
+  }
+
+  @Test
+  void testResetPlayerNotExist() throws AuthmodError {
+    assertFalse(this.dataSource.resetPlayer(this.player));
   }
 }

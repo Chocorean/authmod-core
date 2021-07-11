@@ -18,5 +18,7 @@ public interface DataSourceStrategyInterface {
 
   boolean updatePassword(DataSourcePlayerInterface player) throws AuthmodError;
 
+  boolean resetPlayer(DataSourcePlayerInterface player) throws AuthmodError;
+
   PasswordHashInterface getHashPassword();
 }

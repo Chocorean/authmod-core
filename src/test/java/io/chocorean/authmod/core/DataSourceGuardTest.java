@@ -11,6 +11,7 @@ import io.chocorean.authmod.core.exception.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.Connection;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -42,7 +43,9 @@ class DataSourceGuardTest {
       FILE.delete();
     }
     if (impl instanceof DatabaseStrategy) {
-      connectionFactory.getConnection().createStatement().execute("DELETE FROM players");
+      Connection conn = connectionFactory.getConnection();
+      conn.createStatement().execute("DELETE FROM players");
+      conn.close();
     }
     this.guard = new DataSourceGuard(dataSourceStrategy);
     this.player = new Player("fsociety", null);
