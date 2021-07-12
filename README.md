@@ -81,8 +81,17 @@ public class Main {
     return new DataSourceGuard(strategy);
   }
 }
-
 ```
+
+## Internationalization
+
+Pull requests for adding i18n are more than welcomed. Please make sure to:
+- create ` src/main/resources/assets/authmod/lang/XX_YY.json`.
+- update the enum `Language` in [ServerLanguageMap.java](https://github.com/Chocorean/authmod-core/blob/main/src/main/java/io/chocorean/authmod/core/i18n/ServerLanguageMap.java#L22).
+- update the `README.md` file with your pseudo (optional but strongly recommended!)
+
+Thank you!
+
 
 ## Contributors
 
