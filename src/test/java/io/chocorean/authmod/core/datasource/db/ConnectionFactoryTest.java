@@ -15,6 +15,7 @@ class ConnectionFactoryTest {
     ConnectionFactoryInterface connectionFactory = DBHelpers.initDatabase();
     Connection connection = connectionFactory.getConnection();
     assertNotNull(connection, "Connection should be configured correctly");
+    connection.close();
   }
 
   @Test
@@ -31,6 +32,7 @@ class ConnectionFactoryTest {
     );
     Connection connection = connectionFactory.getConnection();
     assertNotNull(connection, "Connection should be configured correctly");
+    connection.close();
   }
 
   @Test
@@ -52,6 +54,7 @@ class ConnectionFactoryTest {
       connection.getMetaData().getURL(),
       "JDBC URL is malformed for SQLite"
     );
+    connection.close();
   }
 
   @Test

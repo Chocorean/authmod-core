@@ -98,6 +98,21 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   }
 
   @Override
+  public boolean resetPlayer(DataSourcePlayerInterface player) throws AuthmodError {
+    String query = String.format(
+      "DELETE FROM %s WHERE %s = ?",
+      this.table,
+      this.columns.get(Column.USERNAME)
+    );
+    try (Connection conn = this.connectionFactory.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setString(1, player.getUsername());
+      return stmt.executeUpdate() == 1;
+    } catch (SQLException e) {
+      throw new AuthmodError(e.getMessage());
+    }
+  }
+
+  @Override
   public PasswordHashInterface getHashPassword() {
     return this.passwordHash;
   }

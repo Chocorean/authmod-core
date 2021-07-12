@@ -2,6 +2,8 @@ package io.chocorean.authmod.core.datasource;
 
 import io.chocorean.authmod.core.Player;
 import io.chocorean.authmod.core.exception.AuthmodError;
+import io.chocorean.authmod.core.exception.PlayerNotFoundError;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -69,6 +71,20 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
     if (this.exist(player)) {
       this.players.remove(this.find(player.getIdentifier()));
       return this.add(player);
+    }
+    return false;
+  }
+
+  @Override
+  public boolean resetPlayer(DataSourcePlayerInterface player) throws AuthmodError {
+    if (this.exist(player)) {
+      this.players.remove(this.find(player.getIdentifier()));
+      try {
+        this.saveFile();
+        return true;
+      } catch (IOException e) {
+        throw new AuthmodError(e.getMessage());
+      }
     }
     return false;
   }
