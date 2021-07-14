@@ -2,7 +2,6 @@ package io.chocorean.authmod.core.datasource;
 
 import io.chocorean.authmod.core.Player;
 import io.chocorean.authmod.core.exception.AuthmodError;
-import io.chocorean.authmod.core.exception.PlayerNotFoundError;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -117,7 +116,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
 
   private void readFile() throws IOException {
     this.players.clear();
-    this.file.createNewFile();
+    this.file.createNewFile();      
     try (BufferedReader bf = new BufferedReader(new FileReader(this.file))) {
       String line;
       while ((line = bf.readLine()) != null) {
