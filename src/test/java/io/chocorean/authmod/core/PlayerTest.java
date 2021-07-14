@@ -47,6 +47,18 @@ class PlayerTest {
   }
 
   @Test
+  void testGetUsernameUpcase() {
+    player.setUsername("KORBEN");
+    assertEquals("korben", player.getUsername());
+  }
+
+  @Test
+  void testGetUsername() {
+    player.setUsername("KoRBeN__01");
+    assertEquals("korben__01", player.getUsername());
+  }
+
+  @Test
   void testToString() {
     player.setUsername("korben");
     assertEquals("{username: " + this.player.getUsername() + ", uuid: " + this.player.getUuid() + "}", player.toString());

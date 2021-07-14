@@ -2,7 +2,7 @@ package io.chocorean.authmod.core.exception;
 
 public class AuthmodError extends Exception {
 
-  protected static final String DEFAULT_KEY = "authmod.error";
+  public static final String DEFAULT_KEY = "authmod.error";
 
   public AuthmodError() {
     super();
