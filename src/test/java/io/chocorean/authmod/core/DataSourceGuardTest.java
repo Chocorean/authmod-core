@@ -26,7 +26,7 @@ class DataSourceGuardTest {
 
   static {
     try {
-      FILE = Files.createTempFile(DataSourceGuardTest.class.getSimpleName(), "authmod.db").toFile();
+      FILE = Files.createTempFile(DataSourceGuardTest.class.getSimpleName(), "authmod.sqlite").toFile();
     } catch (IOException e) {
       e.printStackTrace();
     }

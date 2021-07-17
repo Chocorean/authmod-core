@@ -36,7 +36,7 @@
 
 ## Data sources
 
-Data can be stored in either a SQL database or a CSV file.
+Data can be stored in either a SQL database or a sqlite file.
 
 | Features | Registration  | Authentication  | Password change |
 | ---------| :-----------: | :-------------: | :-------------: |
@@ -74,10 +74,10 @@ public class Main {
     }
   }
 
-  /** initializes a guard that stores data in a CSV file. */
+  /** initializes a guard that stores data in a sqlite file. */
   private static GuardInterface createGuard() throws IOException {
-    File csvFile = Files.createTempFile(Main.class.getSimpleName(), "players.csv").toFile();
-    DataSourceStrategyInterface strategy = new FileDataSourceStrategy(csvFile);
+    File sqliteFile = Files.createTempFile(Main.class.getSimpleName(), "players.sqlite").toFile();
+    DataSourceStrategyInterface strategy = new FileDataSourceStrategy(sqliteFile);
     return new DataSourceGuard(strategy);
   }
 }

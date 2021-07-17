@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class DatabaseStrategy implements DataSourceStrategyInterface {
 
-  public final static String DEFAULT_TABLE = "players";
+  public static final  String DEFAULT_TABLE = "players";
   private final String table;
   private final Map<Column, String> columns;
 

@@ -19,7 +19,7 @@ class FileDataSourceStrategyTest {
 
   @BeforeEach
   void init() throws Exception {
-    this.dataFile = File.createTempFile("test", "authmod.csv");
+    this.dataFile = File.createTempFile("test", "authmod.sqlite");
     this.dataSource = new FileDataSourceStrategy(this.dataFile);
     this.player = new DataSourcePlayer(new Player().setUsername("Whitney"));
   }
@@ -32,7 +32,7 @@ class FileDataSourceStrategyTest {
   @Test
   void testConstructor() throws Exception {
     new FileDataSourceStrategy(this.dataFile);
-    assertTrue(this.dataFile.exists(), "The strategy should create a CSV file automatically");
+    assertTrue(this.dataFile.exists(), "The strategy should create a sqlite file automatically");
   }
 
   @Test

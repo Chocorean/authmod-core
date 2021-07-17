@@ -6,7 +6,6 @@ import io.chocorean.authmod.core.datasource.DatabaseStrategy;
 import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
@@ -14,7 +13,7 @@ public class GuardFactory {
 
   private GuardFactory() {}
 
-  public static GuardInterface createFromConfig(FactoryConfig config) throws ClassNotFoundException, SQLException, IOException {
+  public static GuardInterface createFromConfig(FactoryConfig config) throws ClassNotFoundException, SQLException {
     DataSourceStrategyInterface datasource;
     switch (config.getStrategy()) {
       case DATABASE:
@@ -31,7 +30,7 @@ public class GuardFactory {
         break;
       case FILE:
       default:
-        datasource = new FileDataSourceStrategy(Paths.get(config.getConfigDirectory().toString(), "authmod.csv").toFile());
+        datasource = new FileDataSourceStrategy(Paths.get(config.getConfigDirectory().toString(), "authmod.sqlite").toFile());
     }
     return new DataSourceGuard(datasource, config.isIdentifierRequired());
   }

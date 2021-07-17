@@ -24,8 +24,8 @@ class DataSourceTest {
   }
 
   private static Stream<Arguments> provideDataSources() throws Exception {
-    File csv = Files.createTempFile("testing", "authmod.csv").toFile();
-    DataSourceStrategyInterface file = new FileDataSourceStrategy(csv);
+    File sqlite = Files.createTempFile("testing", "authmod.sqlite").toFile();
+    DataSourceStrategyInterface file = new FileDataSourceStrategy(sqlite);
     DataSourceStrategyInterface database = new DatabaseStrategy(DBHelpers.initDatabase());
 
     return Stream.of(Arguments.of(database), Arguments.of(file));
