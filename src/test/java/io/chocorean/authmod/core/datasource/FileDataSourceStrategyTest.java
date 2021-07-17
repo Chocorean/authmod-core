@@ -43,19 +43,7 @@ class FileDataSourceStrategyTest {
   @Test
   void testAddDuplicate() throws AuthmodError {
     assertTrue(this.registerPlayer(this.player));
-    assertFalse(this.registerPlayer(this.player));
-  }
-
-  @Test
-  void testFileModified() throws Exception {
-    this.registerPlayer(this.player);
-    Thread.sleep(1000);
-    BufferedWriter writer = new BufferedWriter(new FileWriter(this.dataFile, true));
-    writer.append("mcdostone,mcdostone,password,,false");
-    writer.flush();
-    writer.close();
-    Thread.sleep(1000);
-    assertNotNull(this.dataSource.find("mcdostone"));
+    assertThrows(AuthmodError.class, () -> this.registerPlayer(this.player));
   }
 
   @Test
@@ -103,7 +91,7 @@ class FileDataSourceStrategyTest {
     bw.write("test, test");
     bw.close();
     bw.close();
-    this.dataSource = new FileDataSourceStrategy(this.dataFile);
-    assertFalse(this.dataSource.exist(new DataSourcePlayer(new Player("test", null))));
+    assertThrows(Exception.class, () -> new FileDataSourceStrategy(this.dataFile));
+
   }
 }

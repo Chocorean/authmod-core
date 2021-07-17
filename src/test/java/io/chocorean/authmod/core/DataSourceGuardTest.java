@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
 import io.chocorean.authmod.core.datasource.DatabaseStrategy;
 import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
+import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.core.datasource.db.DBHelpers;
 import io.chocorean.authmod.core.exception.*;
@@ -25,28 +26,26 @@ class DataSourceGuardTest {
 
   static {
     try {
-      FILE = Files.createTempFile(DataSourceGuardTest.class.getSimpleName(), "authmod.csv").toFile();
+      FILE = Files.createTempFile(DataSourceGuardTest.class.getSimpleName(), "authmod.db").toFile();
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  private static ConnectionFactoryInterface connectionFactory;
+  private static ConnectionFactoryInterface[] connectionFactories = new ConnectionFactory[2];
   private PlayerInterface player;
   private DataSourceStrategyInterface dataSourceStrategy;
   private PayloadInterface registrationPayload;
   private PayloadInterface loginPayload;
 
   private void init(DataSourceStrategyInterface impl) throws Exception {
-    this.dataSourceStrategy = impl;
-    if (impl instanceof FileDataSourceStrategy && FILE.exists()) {
-      FILE.delete();
-    }
-    if (impl instanceof DatabaseStrategy) {
-      Connection conn = connectionFactory.getConnection();
+    connectionFactories[0] = new ConnectionFactory(String.format("jdbc:sqlite:%s", FILE.getAbsolutePath(), "org.sqlite.JDBC"));
+    for(ConnectionFactoryInterface c: connectionFactories) {
+      Connection conn = c.getConnection();
       conn.createStatement().execute("DELETE FROM players");
       conn.close();
     }
+    this.dataSourceStrategy = impl;
     this.guard = new DataSourceGuard(dataSourceStrategy);
     this.player = new Player("fsociety", null);
     this.registrationPayload = new Payload(this.player, new String[] { password, password });
@@ -91,8 +90,8 @@ class DataSourceGuardTest {
   void testAuthenticateBanned(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
-    if (impl instanceof DatabaseStrategy) {
-      DBHelpers.banPlayer(connectionFactory, registrationPayload.getPlayer().getUsername());
+    for(ConnectionFactoryInterface c: connectionFactories) {
+      DBHelpers.banPlayer(c, registrationPayload.getPlayer().getUsername());
     }
     this.dataSourceStrategy.find(registrationPayload.getPlayer().getUsername()).setBanned(true);
     assertThrows(BannedPlayerError.class, () -> this.guard.authenticate(this.loginPayload));
@@ -181,7 +180,7 @@ class DataSourceGuardTest {
   }
 
   static Stream<Arguments> parameters() throws Exception {
-    connectionFactory = DBHelpers.initDatabase();
-    return Stream.of(Arguments.of(new FileDataSourceStrategy(FILE)), Arguments.of(new DatabaseStrategy(connectionFactory)));
+    connectionFactories[1] = DBHelpers.initDatabase();
+    return Stream.of(Arguments.of(new FileDataSourceStrategy(FILE)), Arguments.of(new DatabaseStrategy(connectionFactories[1])));
   }
 }

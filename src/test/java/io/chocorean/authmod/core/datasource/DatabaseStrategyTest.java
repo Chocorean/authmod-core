@@ -70,7 +70,7 @@ class DatabaseStrategyTest {
   @Test
   void testAddDuplicate() throws AuthmodError {
     assertTrue(this.dataSource.add(this.player));
-    assertFalse(this.dataSource.add(this.player));
+    assertThrows(AuthmodError.class, () -> this.dataSource.add(this.player));
   }
 
   @Test

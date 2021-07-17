@@ -1,63 +1,46 @@
 package io.chocorean.authmod.core.datasource;
 
-import io.chocorean.authmod.core.Player;
+import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
+import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.util.ArrayList;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class FileDataSourceStrategy implements DataSourceStrategyInterface {
 
-  private static final String SEPARATOR = ",";
-  private final File file;
   private final PasswordHashInterface passwordHash;
-  private long lastModification;
-  private final ArrayList<DataSourcePlayerInterface> players;
+  private final ConnectionFactoryInterface connectionFactory;
+  private final DatabaseStrategy strategy;
 
-  public FileDataSourceStrategy(File file, PasswordHashInterface passwordHash) throws IOException {
-    this.file = file;
+  public FileDataSourceStrategy(File file, PasswordHashInterface passwordHash) throws SQLException, ClassNotFoundException {
     this.passwordHash = passwordHash;
-    this.players = new ArrayList<>();
-    this.readFile();
+    this.connectionFactory = new ConnectionFactory(String.format("jdbc:sqlite:%s", file.getAbsolutePath()), "org.sqlite.JDBC");
+    this.createTable();
+    this.strategy = new DatabaseStrategy(this.connectionFactory);
   }
 
-  public FileDataSourceStrategy(File file) throws IOException {
+  public FileDataSourceStrategy(File file) throws SQLException, ClassNotFoundException {
     this(file, new BcryptPasswordHash());
   }
 
   @Override
   public DataSourcePlayerInterface find(String identifier) throws AuthmodError {
-    try {
-      this.reloadFile();
-    } catch (IOException e) {
-      throw new AuthmodError(e.getMessage());
-    }
-    return this.players.stream().filter(tmp -> tmp.getIdentifier().equals(identifier)).findFirst().orElse(null);
+    return this.strategy.find(identifier);
   }
 
   @Override
   public DataSourcePlayerInterface findByUsername(String username) throws AuthmodError {
-    try {
-      this.reloadFile();
-    } catch (IOException e) {
-      throw new AuthmodError(e.getMessage());
-    }
-    return this.players.stream().filter(tmp -> username.equals(tmp.getUsername())).findFirst().orElse(null);
+    return this.strategy.findByUsername(username);
   }
 
   @Override
   public boolean add(DataSourcePlayerInterface player) throws AuthmodError {
-    if (!this.exist(player)) {
-      this.players.add(player);
-      try {
-        this.saveFile();
-        return true;
-      } catch (IOException e) {
-        throw new AuthmodError(e.getMessage());
-      }
-    }
-    return false;
+    return this.strategy.add(player);
   }
 
   @Override
@@ -67,25 +50,12 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
 
   @Override
   public boolean updatePassword(DataSourcePlayerInterface player) throws AuthmodError {
-    if (this.exist(player)) {
-      this.players.remove(this.find(player.getIdentifier()));
-      return this.add(player);
-    }
-    return false;
+    return this.strategy.updatePassword(player);
   }
 
   @Override
   public boolean resetPlayer(DataSourcePlayerInterface player) throws AuthmodError {
-    if (this.exist(player)) {
-      this.players.remove(this.find(player.getIdentifier()));
-      try {
-        this.saveFile();
-        return true;
-      } catch (IOException e) {
-        throw new AuthmodError(e.getMessage());
-      }
-    }
-    return false;
+    return this.strategy.resetPlayer(player);
   }
 
   @Override
@@ -93,51 +63,34 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
     return this.passwordHash;
   }
 
-  private void saveFile() throws IOException {
-    try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, false))) {
-      bw.write(String.join(SEPARATOR, "# Identifier", " username", " hashed password", " uuid", " is banned ?"));
-      bw.newLine();
-      for (DataSourcePlayerInterface entry : this.players) {
-        bw.write(
-          String.join(
-            SEPARATOR,
-            entry.getIdentifier(),
-            entry.getUsername(),
-            entry.getPassword(),
-            entry.getUuid(),
-            Boolean.toString(entry.isBanned())
-          )
-        );
-        bw.newLine();
-      }
-      this.lastModification = Files.getLastModifiedTime(this.file.toPath()).toMillis();
-    }
-  }
 
-  private void readFile() throws IOException {
-    this.players.clear();
-    this.file.createNewFile();      
-    try (BufferedReader bf = new BufferedReader(new FileReader(this.file))) {
-      String line;
-      while ((line = bf.readLine()) != null) {
-        if (!line.trim().startsWith("#")) {
-          String[] parts = line.trim().split(SEPARATOR);
-          if (parts.length == 5) {
-            DataSourcePlayerInterface p = new DataSourcePlayer(new Player());
-            p.setIdentifier(parts[0].trim())
-              .setPassword(parts[2])
-              .setBanned(Boolean.parseBoolean(parts[4].trim()))
-              .setUuid(parts[3].trim())
-              .setUsername(parts[1].trim());
-            this.players.add(p);
-          }
+  private void createTable() throws SQLException {
+    try(
+      Connection connection = this.connectionFactory.getConnection();
+      Statement stmt = connection.createStatement()) {
+      Map<DatabaseStrategy.Column, String> columns = new EnumMap<>(DatabaseStrategy.Column.class);
+      for (DatabaseStrategy.Column c : DatabaseStrategy.Column.values()) {
+        switch (c) {
+          case IDENTIFIER:
+          case USERNAME:
+            columns.put(c, String.format("%s varchar(255) NOT NULL", c.name().toLowerCase()));
+            break;
+          case PASSWORD:
+          case UUID:
+            columns.put(c, String.format("%s varchar(255)", c.name().toLowerCase()));
+            break;
+          case BANNED:
+            columns.put(c, String.format("%s BOOLEAN DEFAULT 0", c.name().toLowerCase()));
         }
       }
-      this.lastModification = this.file.lastModified();
+      stmt.executeUpdate(String.format("CREATE TABLE IF NOT EXISTS %s (%s," +
+          "id integer PRIMARY KEY," +
+          "UNIQUE (identifier)," +
+          "UNIQUE (uuid)," +
+          "UNIQUE (username));",
+        DatabaseStrategy.DEFAULT_TABLE,
+        String.join(", ", columns.values())));
     }
   }
 
-  private void reloadFile() throws IOException {
-    if (this.lastModification != this.file.lastModified()) this.readFile();
-  }
 }

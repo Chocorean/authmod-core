@@ -46,7 +46,7 @@ class DataSourceTest {
   @MethodSource("provideDataSources")
   void testRegisterPlayerTwice(DataSourceStrategyInterface dataSource) throws AuthmodError {
     assertTrue(this.registerPlayer(dataSource, this.player));
-    assertFalse(this.registerPlayer(dataSource, this.player));
+    assertThrows(AuthmodError.class, () -> this.registerPlayer(dataSource, this.player));
   }
 
   @ParameterizedTest

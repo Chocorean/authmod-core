@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class DatabaseStrategy implements DataSourceStrategyInterface {
 
+  public final static String DEFAULT_TABLE = "players";
   private final String table;
   private final Map<Column, String> columns;
 
@@ -32,7 +33,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
     this.connectionFactory = connectionFactory;
     this.columns = new EnumMap<>(Column.class);
     for (Column c : Column.values()) {
-      this.columns.put(c, c.name());
+      this.columns.put(c, c.name().toLowerCase());
     }
     this.columns.putAll(customColumns);
     this.passwordHash = passwordHash;
@@ -40,7 +41,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   }
 
   public DatabaseStrategy(ConnectionFactoryInterface connectionFactory) throws SQLException {
-    this("players", connectionFactory, new EnumMap<>(Column.class), new BcryptPasswordHash());
+    this(DEFAULT_TABLE, connectionFactory, new EnumMap<>(Column.class), new BcryptPasswordHash());
   }
 
   @Override
@@ -54,7 +55,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   }
 
   @Override
-  public boolean add(DataSourcePlayerInterface player) {
+  public boolean add(DataSourcePlayerInterface player) throws AuthmodError {
     String query = String.format(
       "INSERT INTO %s(%s, %s, %s, %s) VALUES(?, ?, ?, ?)",
       this.table,
@@ -71,7 +72,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
       stmt.executeUpdate();
       return true;
     } catch (SQLException e) {
-      return false;
+      throw new AuthmodError(e.getMessage());
     }
   }
 

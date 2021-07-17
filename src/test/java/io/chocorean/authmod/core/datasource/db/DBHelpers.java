@@ -35,11 +35,11 @@ public class DBHelpers {
     );
   }
 
-  public static void banPlayer(ConnectionFactoryInterface connectionFactory, String identifier) throws Exception {
+  public static void banPlayer(ConnectionFactoryInterface connectionFactory, String username) throws Exception {
     Connection connection = connectionFactory.getConnection();
     if (connection != null) {
-      PreparedStatement stmt = connection.prepareStatement("UPDATE players SET banned = true WHERE identifier = ?");
-      stmt.setString(1, identifier);
+      PreparedStatement stmt = connection.prepareStatement("UPDATE players SET banned = true WHERE username = ?");
+      stmt.setString(1, username);
       stmt.executeUpdate();
       connection.close();
     }
