@@ -8,11 +8,9 @@ public class DataSourcePlayer implements DataSourcePlayerInterface {
   private String password;
   private boolean banned;
   private final PlayerInterface player;
-  private String identifier;
 
   public DataSourcePlayer(PlayerInterface player) {
     this.player = player;
-    this.identifier = player.getUsername();
     this.password = "";
   }
 
@@ -40,17 +38,6 @@ public class DataSourcePlayer implements DataSourcePlayerInterface {
   @Override
   public String getPassword() {
     return this.password;
-  }
-
-  @Override
-  public String getIdentifier() {
-    return this.identifier;
-  }
-
-  @Override
-  public DataSourcePlayerInterface setIdentifier(String identifier) {
-    this.identifier = identifier != null ? identifier.trim() : "";
-    return this;
   }
 
   @Override

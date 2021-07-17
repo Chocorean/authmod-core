@@ -32,7 +32,7 @@ class DataSourceGuardTest {
     }
   }
 
-  private static ConnectionFactoryInterface[] connectionFactories = new ConnectionFactory[2];
+  private static final ConnectionFactoryInterface[] connectionFactories = new ConnectionFactory[2];
   private PlayerInterface player;
   private DataSourceStrategyInterface dataSourceStrategy;
   private PayloadInterface registrationPayload;
@@ -93,7 +93,7 @@ class DataSourceGuardTest {
     for(ConnectionFactoryInterface c: connectionFactories) {
       DBHelpers.banPlayer(c, registrationPayload.getPlayer().getUsername());
     }
-    this.dataSourceStrategy.find(registrationPayload.getPlayer().getUsername()).setBanned(true);
+    this.dataSourceStrategy.findByUsername(registrationPayload.getPlayer().getUsername()).setBanned(true);
     assertThrows(BannedPlayerError.class, () -> this.guard.authenticate(this.loginPayload));
   }
 
@@ -117,15 +117,6 @@ class DataSourceGuardTest {
     init(impl);
     this.guard.register(this.registrationPayload);
     assertThrows(PlayerAlreadyExistError.class, () -> this.guard.register(this.registrationPayload));
-  }
-
-  @ParameterizedTest(name = "with {0}")
-  @MethodSource("parameters")
-  void testRegisterIdentifierRequired(DataSourceStrategyInterface impl) throws Exception {
-    init(impl);
-    this.guard = new DataSourceGuard(dataSourceStrategy, true);
-    this.registrationPayload = new Payload(this.player, new String[] { "Crumb", this.password, this.password });
-    assertTrue(this.guard.register(this.registrationPayload));
   }
 
   @ParameterizedTest(name = "with {0}")

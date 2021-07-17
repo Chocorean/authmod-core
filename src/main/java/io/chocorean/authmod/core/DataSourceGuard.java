@@ -12,22 +12,16 @@ import io.chocorean.authmod.core.validator.ValidatorInterface;
 public class DataSourceGuard implements GuardInterface {
 
   private final DataSourceStrategyInterface datasource;
-  private final boolean identifierRequired;
-
-  public DataSourceGuard(DataSourceStrategyInterface d, boolean identifierRequired) {
-    this.datasource = d;
-    this.identifierRequired = identifierRequired;
-  }
 
   public DataSourceGuard(DataSourceStrategyInterface dataSourceStrategy) {
-    this(dataSourceStrategy, false);
+    this.datasource = dataSourceStrategy;
   }
 
   @Override
   public boolean authenticate(PayloadInterface payload) throws AuthmodError {
-    ValidatorInterface validator = new LoginValidator(this.identifierRequired);
+    ValidatorInterface validator = new LoginValidator();
     validator.validate(payload);
-    DataSourcePlayerInterface foundPlayer = this.datasource.find(this.getIdentifier(payload));
+    DataSourcePlayerInterface foundPlayer = this.datasource.findByUsername(payload.getPlayer().getUsername());
     if (foundPlayer == null) throw new PlayerNotFoundError();
     if (foundPlayer.isBanned()) {
       throw new BannedPlayerError();
@@ -41,10 +35,9 @@ public class DataSourceGuard implements GuardInterface {
 
   @Override
   public boolean register(PayloadInterface payload) throws AuthmodError {
-    ValidatorInterface validator = new RegistrationValidator(this.identifierRequired);
+    ValidatorInterface validator = new RegistrationValidator();
     validator.validate(payload);
     DataSourcePlayerInterface playerProxy = new DataSourcePlayer(payload.getPlayer());
-    if (identifierRequired) playerProxy.setIdentifier(payload.getArgs()[0]);
     if (this.datasource.exist(playerProxy)) throw new PlayerAlreadyExistError();
     this.hashPassword(playerProxy, payload.getArgs()[payload.getArgs().length - 1]);
     return this.datasource.add(playerProxy);
@@ -59,10 +52,6 @@ public class DataSourceGuard implements GuardInterface {
     if (!this.datasource.getHashPassword().check(foundPlayer.getPassword(), payload.getArgs()[0])) throw new WrongPasswordError();
     this.hashPassword(foundPlayer, payload.getArgs()[payload.getArgs().length - 1]);
     return this.datasource.updatePassword(foundPlayer);
-  }
-
-  private String getIdentifier(PayloadInterface payload) {
-    return this.identifierRequired ? payload.getArgs()[0] : payload.getPlayer().getUsername();
   }
 
   private void hashPassword(DataSourcePlayerInterface player, String password) {

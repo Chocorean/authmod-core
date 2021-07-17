@@ -23,12 +23,10 @@ public class DBHelpers {
     return (
       "CREATE TABLE players (" +
       "id integer PRIMARY KEY," +
-      "identifier varchar(255) NOT NULL," +
       "password varchar(255)," +
       "uuid varchar(255), " +
       "username varchar(255) NOT NULL," +
       "banned INTEGER DEFAULT 0," +
-      "UNIQUE (identifier)," +
       "UNIQUE (uuid)," +
       "UNIQUE (username)" +
       ");"
@@ -52,18 +50,15 @@ public class DBHelpers {
     connection.close();
   }
 
-  public static ConnectionFactoryInterface initDatabase(String identifier)
+  public static ConnectionFactoryInterface initDatabase()
     throws SQLException, IOException, ClassNotFoundException {
     initDatabaseFile();
     ConnectionFactory connectionFactory = new ConnectionFactory("jdbc:sqlite:" + file.getAbsolutePath(), "org.sqlite.JDBC");
     Connection connection = connectionFactory.getConnection();
     Statement stmt = connection.createStatement();
-    stmt.executeUpdate(getCreationTableQuery().replace("identifier", identifier));
+    stmt.executeUpdate(getCreationTableQuery());
     connection.close();
     return connectionFactory;
   }
 
-  public static ConnectionFactoryInterface initDatabase() throws SQLException, IOException, ClassNotFoundException {
-    return initDatabase("identifier");
-  }
 }

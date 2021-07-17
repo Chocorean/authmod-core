@@ -51,16 +51,9 @@ class DataSourceTest {
 
   @ParameterizedTest
   @MethodSource("provideDataSources")
-  void testFind(DataSourceStrategyInterface dataSource) throws AuthmodError {
+  void testFindUsername(DataSourceStrategyInterface dataSource) throws AuthmodError {
     this.registerPlayer(dataSource, this.player);
-    assertNotNull(dataSource.find(this.player.getUsername()), "The player should be found");
-  }
-
-  @ParameterizedTest
-  @MethodSource("provideDataSources")
-  void testFindNotExist(DataSourceStrategyInterface dataSource) throws AuthmodError {
-    this.registerPlayer(dataSource, this.player);
-    assertNull(dataSource.find("test@test.com"), "The player should not exist");
+    assertNotNull(dataSource.findByUsername(this.player.getUsername()), "The player should be found");
   }
 
   @ParameterizedTest
@@ -74,21 +67,14 @@ class DataSourceTest {
   @MethodSource("provideDataSources")
   void testFindByUsernameNotExist(DataSourceStrategyInterface dataSource) throws AuthmodError {
     this.registerPlayer(dataSource, this.player);
-    assertNull(dataSource.find("Eddy le quartier"), "The player should not exist");
+    assertNull(dataSource.findByUsername("Eddy le quartier"), "The player should not exist");
   }
 
   @ParameterizedTest
   @MethodSource("provideDataSources")
   void testFindByUsernameNullParams(DataSourceStrategyInterface dataSource) throws AuthmodError {
     this.registerPlayer(dataSource, this.player);
-    assertNull(dataSource.find(null), "It should return null");
-  }
-
-  @ParameterizedTest
-  @MethodSource("provideDataSources")
-  void testFindNullParams(DataSourceStrategyInterface dataSource) throws AuthmodError {
-    this.registerPlayer(dataSource, this.player);
-    assertNull(dataSource.find(null), "It should return null");
+    assertNull(dataSource.findByUsername(null), "It should return null");
   }
 
   @ParameterizedTest

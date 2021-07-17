@@ -18,7 +18,7 @@ class LoginValidatorTest {
 
   @BeforeEach
   void init() {
-    this.validator = new LoginValidator(false);
+    this.validator = new LoginValidator();
     this.player = new Player(null, null);
   }
 

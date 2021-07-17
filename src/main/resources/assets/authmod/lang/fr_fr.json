@@ -13,7 +13,7 @@
   "authmod.logged.usage": "/logged - Vous informe si vous êtes authentifié.",
   "authmod.login.wrongUUID": "Mauvais UUID.",
   "authmod.login.wrongUsername": "Votre username ne correspond à celui enregistré.",
-  "authmod.register.exist": "Quelqu'un a déjà utilisé l'identifiant %s.",
+  "authmod.register.exist": "Quelqu'un a déjà utilisé le pseudo %s.",
   "authmod.register.usage": "/register <ID> <password> <confirmation> - Permet de vous enregistrer sur ce serveur.",
   "authmod.register.success": "Tu es enregistré, have fun!",
   "authmod.changepassword.success": "Mot de passe changé!",

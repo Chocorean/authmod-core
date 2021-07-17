@@ -11,7 +11,4 @@ public interface DataSourcePlayerInterface extends PlayerInterface {
 
   String getPassword();
 
-  String getIdentifier();
-
-  DataSourcePlayerInterface setIdentifier(String identifier);
 }

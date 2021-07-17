@@ -8,8 +8,6 @@ public interface DataSourceStrategyInterface {
     DATABASE,
   }
 
-  DataSourcePlayerInterface find(String identifier) throws AuthmodError;
-
   DataSourcePlayerInterface findByUsername(String username) throws AuthmodError;
 
   boolean add(DataSourcePlayerInterface player) throws AuthmodError;

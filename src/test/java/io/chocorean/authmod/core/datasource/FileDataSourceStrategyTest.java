@@ -47,21 +47,21 @@ class FileDataSourceStrategyTest {
   }
 
   @Test
-  void testFind() throws AuthmodError {
+  void testFindUsername() throws AuthmodError {
     this.registerPlayer(this.player);
-    assertNotNull(dataSource.find(this.player.getIdentifier()), "The player should be found");
+    assertNotNull(dataSource.findByUsername(this.player.getUsername()), "The player should be found");
   }
 
   @Test
-  void testFindNotExist() throws AuthmodError {
+  void testFindUsernameNotExist() throws AuthmodError {
     this.registerPlayer(this.player);
-    assertNull(dataSource.find("test@test.com"), "The player should not exist");
+    assertNull(dataSource.findByUsername("test@test.com"), "The player should not exist");
   }
 
   @Test
-  void testFindNullParams() throws AuthmodError {
+  void testFindUsernameNullParams() throws AuthmodError {
     this.registerPlayer(this.player);
-    assertNull(dataSource.find(null), "It should return null");
+    assertNull(dataSource.findByUsername(null), "It should return null");
   }
 
   @Test

@@ -16,13 +16,6 @@ class DataSourcePlayerTest {
   }
 
   @Test
-  void testSetIdentifier() {
-    String email = "root@root.fr";
-    this.player.setIdentifier(email + ' ');
-    assertEquals(email, this.player.getIdentifier());
-  }
-
-  @Test
   void testSetUsername() {
     String username = "mcdostone";
     this.player.setUsername(username + ' ');
@@ -46,12 +39,6 @@ class DataSourcePlayerTest {
     String password = "rootroot ";
     this.player.setPassword(password);
     assertEquals(this.player.getPassword(), password);
-  }
-
-  @Test
-  void testSetIdentifierNullParam() {
-    this.player.setIdentifier(null);
-    assertEquals(0, this.player.getIdentifier().length(), "The email should be null");
   }
 
   @Test

@@ -29,11 +29,6 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   }
 
   @Override
-  public DataSourcePlayerInterface find(String identifier) throws AuthmodError {
-    return this.strategy.find(identifier);
-  }
-
-  @Override
   public DataSourcePlayerInterface findByUsername(String username) throws AuthmodError {
     return this.strategy.findByUsername(username);
   }
@@ -45,7 +40,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
 
   @Override
   public boolean exist(DataSourcePlayerInterface player) throws AuthmodError {
-    return this.find(player.getIdentifier()) != null;
+    return this.findByUsername(player.getUsername()) != null;
   }
 
   @Override
@@ -71,7 +66,6 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
       Map<DatabaseStrategy.Column, String> columns = new EnumMap<>(DatabaseStrategy.Column.class);
       for (DatabaseStrategy.Column c : DatabaseStrategy.Column.values()) {
         switch (c) {
-          case IDENTIFIER:
           case USERNAME:
             columns.put(c, String.format("%s varchar(255) NOT NULL", c.name().toLowerCase()));
             break;
@@ -85,7 +79,6 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
       }
       stmt.executeUpdate(String.format("CREATE TABLE IF NOT EXISTS %s (%s," +
           "id integer PRIMARY KEY," +
-          "UNIQUE (identifier)," +
           "UNIQUE (uuid)," +
           "UNIQUE (username));",
         DatabaseStrategy.DEFAULT_TABLE,

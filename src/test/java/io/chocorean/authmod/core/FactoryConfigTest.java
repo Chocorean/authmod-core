@@ -28,11 +28,6 @@ class FactoryConfigTest {
   }
 
   @Test
-  void testIdentifierRequired() {
-    assertTrue(new FactoryConfig().setIdentifierRequired(true).isIdentifierRequired());
-  }
-
-  @Test
   void testHost() {
     assertEquals("localhost", new FactoryConfig().setHost("localhost").getHost());
   }

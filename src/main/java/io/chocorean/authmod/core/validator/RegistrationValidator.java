@@ -7,15 +7,9 @@ import io.chocorean.authmod.core.exception.WrongRegisterUsageError;
 
 public class RegistrationValidator implements ValidatorInterface {
 
-  private final boolean identifierRequired;
-
-  public RegistrationValidator(boolean identifierRequired) {
-    this.identifierRequired = identifierRequired;
-  }
-
   @Override
   public boolean validate(PayloadInterface payload) throws AuthmodError {
-    int numberOfArgs = this.identifierRequired ? 3 : 2;
+    int numberOfArgs = 2;
     if (payload.getArgs().length != numberOfArgs) {
       throw new WrongRegisterUsageError();
     }

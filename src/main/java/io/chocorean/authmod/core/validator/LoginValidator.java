@@ -6,15 +6,11 @@ import io.chocorean.authmod.core.exception.WrongLoginUsageError;
 
 public class LoginValidator implements ValidatorInterface {
 
-  private final boolean indentifierRequired;
-
-  public LoginValidator(boolean identifierRequired) {
-    this.indentifierRequired = identifierRequired;
-  }
+  public LoginValidator() { }
 
   @Override
   public boolean validate(PayloadInterface payload) throws AuthmodError {
-    int numberOfArgs = this.indentifierRequired ? 2 : 1;
+    int numberOfArgs = 1;
     if (payload.getArgs().length != numberOfArgs) {
       throw new WrongLoginUsageError();
     }

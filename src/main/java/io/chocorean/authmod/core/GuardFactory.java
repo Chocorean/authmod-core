@@ -32,6 +32,6 @@ public class GuardFactory {
       default:
         datasource = new FileDataSourceStrategy(Paths.get(config.getConfigDirectory().toString(), "authmod.sqlite").toFile());
     }
-    return new DataSourceGuard(datasource, config.isIdentifierRequired());
+    return new DataSourceGuard(datasource);
   }
 }

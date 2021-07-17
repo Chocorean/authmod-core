@@ -12,7 +12,6 @@ import java.util.Map;
 public class FactoryConfig {
 
   private DataSourceStrategyInterface.Strategy strategy = FILE;
-  private boolean identifierRequired;
   private String dialect = "";
   private String host = "";
   private int port;
@@ -111,15 +110,6 @@ public class FactoryConfig {
 
   public FactoryConfig setStrategy(DataSourceStrategyInterface.Strategy strategy) {
     this.strategy = strategy;
-    return this;
-  }
-
-  public boolean isIdentifierRequired() {
-    return identifierRequired;
-  }
-
-  public FactoryConfig setIdentifierRequired(boolean identifierRequired) {
-    this.identifierRequired = identifierRequired;
     return this;
   }
 

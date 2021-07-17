@@ -19,7 +19,7 @@ class RegistrationValidatorTest {
 
   @BeforeEach
   void init() {
-    this.validator = new RegistrationValidator(false);
+    this.validator = new RegistrationValidator();
     this.player = new Player(null, null);
   }
 
