@@ -37,7 +37,7 @@ public class Player implements PlayerInterface {
   }
 
   public String getUsername() {
-    return username.toLowerCase();
+    return username;
   }
 
   public Player setUsername(String username) {

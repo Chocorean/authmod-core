@@ -47,15 +47,9 @@ class PlayerTest {
   }
 
   @Test
-  void testGetUsernameUpcase() {
-    player.setUsername("KORBEN");
-    assertEquals("korben", player.getUsername());
-  }
-
-  @Test
   void testGetUsername() {
     player.setUsername("KoRBeN__01");
-    assertEquals("korben__01", player.getUsername());
+    assertEquals("KoRBeN__01", player.getUsername());
   }
 
   @Test

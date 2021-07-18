@@ -45,7 +45,16 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
 
   @Override
   public DataSourcePlayerInterface findByUsername(String username) throws AuthmodError {
-    return this.findBy(this.columns.get(Column.USERNAME), username);
+    try (
+      Connection conn = this.connectionFactory.getConnection();
+      PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE LOWER(%s) = LOWER(?)", this.table, this.columns.get(Column.USERNAME)))
+    ) {
+      stmt.setString(1, username);
+      ResultSet rs = stmt.executeQuery();
+      return this.createPlayer(rs);
+    } catch (SQLException e) {
+      throw new AuthmodError(e.getMessage());
+    }
   }
 
   @Override
@@ -125,19 +134,6 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
       )
     ) {
       stmt.executeQuery();
-    }
-  }
-
-  private DataSourcePlayerInterface findBy(String columnName, String value) throws AuthmodError {
-    try (
-      Connection conn = this.connectionFactory.getConnection();
-      PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE %s = ?", this.table, columnName))
-    ) {
-      stmt.setString(1, value);
-      ResultSet rs = stmt.executeQuery();
-      return this.createPlayer(rs);
-    } catch (SQLException e) {
-      throw new AuthmodError(e.getMessage());
     }
   }
 

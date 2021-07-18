@@ -23,13 +23,6 @@ class DataSourcePlayerTest {
   }
 
   @Test
-  void testSetUsernameDownCase() {
-    String username = "MCDOSTone";
-    this.player.setUsername(username);
-    assertEquals("mcdostone", this.player.getUsername());
-  }
-
-  @Test
   void testIsPremium() {
     assertTrue(this.player.isPremium());
   }

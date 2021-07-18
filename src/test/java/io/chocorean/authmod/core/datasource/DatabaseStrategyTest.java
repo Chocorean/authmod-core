@@ -9,6 +9,9 @@ import io.chocorean.authmod.core.datasource.db.DBHelpers;
 import io.chocorean.authmod.core.exception.AuthmodError;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -118,5 +121,22 @@ class DatabaseStrategyTest {
   @Test
   void testResetPlayerNotExist() throws AuthmodError {
     assertFalse(this.dataSource.resetPlayer(this.player));
+  }
+
+  @Test
+  void findUsernameUpperCase() throws AuthmodError, SQLException {
+    String username = "JUNGLE";
+    try (
+      Connection c = this.connectionFactory.getConnection();
+      PreparedStatement stmt = c.prepareStatement("INSERT INTO players(username, password) VALUES(?, ?)");
+      PreparedStatement stmt2 = c.prepareStatement("SELECT username FROM players WHERE username = ?")) {
+        stmt.setString(1, username);
+        stmt.execute();
+        assertNotNull(this.dataSource.findByUsername(username));
+        stmt2.setString(1, username);
+        ResultSet rs = stmt2.executeQuery();
+        rs.next();
+        assertEquals(username, rs.getString(1));
+    }
   }
 }

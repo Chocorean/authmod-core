@@ -40,7 +40,7 @@ Data can be stored in either a SQL database or a sqlite file.
 
 | Features | Registration  | Authentication  | Password change |
 | ---------| :-----------: | :-------------: | :-------------: |
-| [File strategy](main/src/main/java/io/chocorean/authmod/core/datasource/FileDataSourceStrategy.java) | **✔** | **✔** | **✔** |
+| [File strategy](https://github.com/Chocorean/authmod-core/blob/main/src/main/java/io/chocorean/authmod/core/datasource/FileDataSourceStrategy.java) | **✔** | **✔** | **✔** |
 | [Database strategy](https://github.com/Chocorean/authmod-core/blob/main/src/main/java/io/chocorean/authmod/core/datasource/DatabaseStrategy.java) | **✔** | **✔** | **✔** |
 
 ## Example
