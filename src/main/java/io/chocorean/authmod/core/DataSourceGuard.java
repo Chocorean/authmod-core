@@ -21,7 +21,7 @@ public class DataSourceGuard implements GuardInterface {
   public boolean authenticate(PayloadInterface payload) throws AuthmodError {
     ValidatorInterface validator = new LoginValidator();
     validator.validate(payload);
-    DataSourcePlayerInterface foundPlayer = this.datasource.findByUsername(payload.getPlayer().getUsername());
+    DataSourcePlayerInterface foundPlayer = this.datasource.findByUsername(payload.getPlayer().getUsername().toLowerCase());
     if (foundPlayer == null) throw new PlayerNotFoundError();
     if (foundPlayer.isBanned()) {
       throw new BannedPlayerError();
@@ -47,7 +47,7 @@ public class DataSourceGuard implements GuardInterface {
   public boolean updatePassword(PayloadInterface payload) throws AuthmodError {
     ValidatorInterface validator = new ChangePasswordValidator();
     validator.validate(payload);
-    DataSourcePlayerInterface foundPlayer = this.datasource.findByUsername(payload.getPlayer().getUsername());
+    DataSourcePlayerInterface foundPlayer = this.datasource.findByUsername(payload.getPlayer().getUsername().toLowerCase());
     if (foundPlayer == null) return false;
     if (!this.datasource.getHashPassword().check(foundPlayer.getPassword(), payload.getArgs()[0])) throw new WrongPasswordError();
     this.hashPassword(foundPlayer, payload.getArgs()[payload.getArgs().length - 1]);
