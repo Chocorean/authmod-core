@@ -75,7 +75,7 @@ public class Main {
   }
 
   /** initializes a guard that stores data in a sqlite file. */
-  private static GuardInterface createGuard() throws IOException {
+  private static GuardInterface createGuard() throws Exception {
     File sqliteFile = Files.createTempFile(Main.class.getSimpleName(), "players.sqlite").toFile();
     DataSourceStrategyInterface strategy = new FileDataSourceStrategy(sqliteFile);
     return new DataSourceGuard(strategy);
