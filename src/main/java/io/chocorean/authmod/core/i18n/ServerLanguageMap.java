@@ -23,6 +23,7 @@ public class ServerLanguageMap {
     EN_US,
     FR_FR,
     ES_ES,
+    PT_BR,
   }
 
   private ServerLanguageMap(Map<String, String> map) {

@@ -98,3 +98,4 @@ Thank you!
 - Baptiste Chocot ([@Chocorean](https://www.github.com/Chocorean/)) or `Sunser#7808` (Discord)
 - Yann Prono ([@Mcdostone](https://www.github.com/Mcdostone/))
 - [weffermiguel](https://www.curseforge.com/members/weffermiguel) for spanish i18n
+- Leonardo Braz ([@lhleonardo](https://www.github.com/lhleonardo)) for brazilian i18n

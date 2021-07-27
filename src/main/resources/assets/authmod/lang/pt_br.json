@@ -1,0 +1,22 @@
+{
+    "authmod.error": "Algum erro aconteceu. Entre em contato com o administrador.",
+    "authmod.welcome": "Faça o login com /login ou crie seu cadastro com /register.",
+    "authmod.wakeUp": "Ei! Você tem %s segundos para realizar o login.",
+    "authmod.banned": "Você foi banido. Entre em contato com o administrador.",
+    "authmod.wrongPassword": "Senha incorreta. Tente novamente.",
+    "authmod.wrongPasswordConfirmation": "As senhas informadas não coincidiram.",
+    "authmod.logged.yes": "Você está autenticado.",
+    "authmod.logged.no": "Você não está autenticado.",
+    "authmod.login.usage": "/login <senha> - Permite realizar o login no servidor.",
+    "authmod.login.notFound": "%s não está cadastrado no servidor.",
+    "authmod.login.success": "Divirta-se!",
+    "authmod.logged.usage": "/logged - Informa se está autenticado ou não.",
+    "authmod.login.wrongUUID": "UUID Inválido. Confira se o UUID utilizado é o mesmo utilizado no momento do cadastro.",
+    "authmod.login.wrongUsername": "Seu nickname (username) não confere com o utilizado no cadastro.",
+    "authmod.register.exist": "O nome %s já está cadastrado.",
+    "authmod.register.usage": "/register <senha> <senha> - Realiza o cadastro. Cuidado! Essa senha será utilizada para entrar no servidor.",
+    "authmod.register.success": "Você foi cadastrado e autenticado! Divirta-se!",
+    "authmod.changepassword.success": "Senha modificada!",
+    "authmod.changepassword.samePassword": "A nova senha precisa ser diferente da senha anterior.",
+    "authmod.changepassword.usage": "/changepassword <senha-antiga> <nova-senha> <confirmação-nova-senha> - Mude sua senha!"
+}
