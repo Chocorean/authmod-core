@@ -29,7 +29,7 @@ class ServerLanguageMapTest {
 
   @ParameterizedTest
   @EnumSource(ServerLanguageMap.Language.class)
-  void getValueForAMonth_IsAlwaysBetweenOneAndTwelve(ServerLanguageMap.Language lang) {
+  void testloadTranslationsWithAllSupportedLanguages(ServerLanguageMap.Language lang) {
     ServerLanguageMap.loadTranslations(lang.name());
     assertNotNull(ServerLanguageMap.getInstance().getOrDefault(key));
   }
